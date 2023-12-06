@@ -32,7 +32,13 @@ async def main():
         memphis = Memphis()
         await memphis.connect(host=cts.Host, username=cts.User, password=cts.Pass, account_id=cts.AccountID, reconnect=True,max_reconnect=3000000, reconnect_interval_ms=1500, timeout_ms=5000)
       
-        consumer = await memphis.consumer(station_name="events-1", consumer_name="consumer-Barak-1", consumer_group="Gido-1", batch_size=1)
+        consumer = await memphis.consumer(
+            station_name="events-1", 
+            consumer_name="consumer-Barak-1", 
+            consumer_group="Gido-1",
+            pull_interval_ms=100, 
+            batch_size=1000,
+            batch_max_time_to_wait_ms=5000)
         consumer.set_context({"key": "value"})
         consumer.consume(msg_handler, consumer_partition_key="key-1")
         # Keep your main thread alive so the consumer will keep receiving data
